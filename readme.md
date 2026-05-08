@@ -47,4 +47,4 @@ As $n$ increases, the $SE$ decreases, squeezing the distribution of sample means
 $$\bar{x} \pm 1.96 \times SE$$
 
 ---
-*Created by ['dilmilsoach']@dilmilsoach as an educational tool for statistics and data science.*
+*Created by @dilmilsoach as an educational tool for statistics and data science.*
