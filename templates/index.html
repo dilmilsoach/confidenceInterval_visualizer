@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sampling Distribution Visualizer</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body { font-family: sans-serif; margin: 40px; background: #f4f7f6; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .controls { background: #eee; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        input[type=range] { width: 100%; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Dynamic Confidence Interval</h1>
+        <div class="controls">
+            <label>Sample Size (n): <b id="n_val">30</b></label>
+            <input type="range" id="n_slider" min="2" max="1000" value="30">
+        </div>
+        <div id="plot"></div>
+    </div>
+
+    <script>
+        const slider = document.getElementById('n_slider');
+        const nLabel = document.getElementById('n_val');
+
+        function updatePlot(n) {
+            fetch('/update', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ n: n })
+            })
+            .then(res => res.json())
+            .then(data => {
+                const layout = {
+                    xaxis: { title: 'Distance from True Mean', range: [-3, 3] },
+                    yaxis: { title: 'Density', range: [0, Math.max(...data.y_full) * 1.2] },
+                    margin: { t: 20 }
+                };
+                Plotly.react('plot', data.traces, layout);
+            });
+        }
+
+        slider.oninput = function() {
+            nLabel.innerText = this.value;
+            updatePlot(this.value);
+        };
+
+        updatePlot(30);
+    </script>
+</body>
+</html>
